@@ -9,7 +9,7 @@ defmodule Deriv do
  def deriv({:var,_},_) do {:num,0} end
  def deriv({:add,e1,e2},x) do {:add,deriv(e1,x),deriv(e2,x)} end
  def deriv({:mul,e1,e2},x) do {:add,{:mul,deriv(e1,x),e2},{:mul,e1,deriv(e2,x)}} end
- def deriv({:ln,x},x) do {:mul,{:div,1,x},deriv(x,x)}  end
+ def deriv({:ln,x},x) do {:mul,{:div,{:num,1},x},deriv(x,x)}  end
  def deriv({:div,a,x},x) do {:div,{:num,-a},{:pow,x,2}} end
  def deriv({:pow,x,a},x) do {:mul,a,{:pow,x,{:num, a-1}}} end
  def deriv({:Sqrt,x},x) do {:mul,{:div,1,2},{:div,1,{:sqrt,x}}} end
