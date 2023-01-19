@@ -16,15 +16,37 @@ defmodule Deriv do
  def deriv({:trig,:sin,x},x) do {:trig,:cos,x} end
  def deriv({:trig,:cos,x},x) do {:mul,{:trig,:sin,x},{:num,-1}} end
 
+
+
+
  def simplify({:num,a}) do a end
  def simplify({:var,x}) do x end
- def simplify({:add,e1,e2}) do simplify(e1) + simplify(e2) end
- def simplify({:mul,e1,e2}) do simplify(e1) * simplify(e2) end
- def simplify({:div,e1,e2}) do simplify(e1) / simplify(e2) end
+ def simplify({:add,e1,e2}) do simplify_add(simplify(e1),simplify(e2)) end
+ def simplify({:mul,e1,e2}) do simplify_mul(simplify(e1),simplify(e2)) end
+ def simplify({:div,e1,e2}) do simplify_div(simplify(e1),simplify(e2)) end
+
+
+ def simplify_add(e1,{:num,0}) do e1 end
+ def simplify_add({:num,0},e1) do e1 end
+ def simplify_add({:num,a},{:num,b}) do simplify({:num,a+b})   end
+ def simplify_add(e1,e2) do {:add,e1,e2} end
+
+ def simplify_mul(e1,{:num,0}) do 0 end
+ def simplify_mul({:num,0},e1) do 0 end
+ def simplify_mul({:num,a},{:num,b}) do {:num,a*b} end
+ def simplify_mul(e1,e2) do {:mul,e1,e2} end
+ def simplify_mul(e1,{:num,1}) do e1 end
+ def simplify_mul({:num,1},e1) do e1 end
 
 
 
 
+
+ def pprint({:num, n}) do "#{n}" end
+ def pprint({:var, v}) do "#{v}" end
+ def pprint({:add, expr1, expr2}) do "#{pprint(expr1)} + #{pprint(expr2)}" end
+ def pprint({:mul, expr1, expr2}) do "(#{pprint(expr1)} * #{pprint(expr2)})" end
+ def pprint({:powr, expr1, expr2}) do "#{pprint(expr1)} ^(#{pprint(expr2)})" end
 end
 
 defmodule Main do
